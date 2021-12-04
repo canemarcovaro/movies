@@ -66,6 +66,9 @@ pipeline {
                 sh "docker push zwenger/api-server"
             }
         }
+        stage("Deploy") {
+            
+        }
 
         
         
