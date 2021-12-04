@@ -1,6 +1,19 @@
 pipeline {
     agent any
     stages {
+        stage('Stop') {
+            steps {
+                sh 'make stop'
+            }
+            post {
+                success {
+                    slackSend (color: 'good', message: "STOP SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                }
+                failure {
+                    slackSend (color: 'danger', message: "STOP FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                }
+            }
+        }
         stage('Build') {
             steps {
                 sh 'make build'
@@ -53,19 +66,7 @@ pipeline {
                 sh "docker push zwenger/api-server"
             }
         }
-//         stage('stop') {
-//             steps {
-//                 sh 'make stop'
-//             }
-//             post {
-//                 success {
-//                     slackSend (color: 'good', message: "STOP SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-//                 }
-//                 failure {
-//                     slackSend (color: 'danger', message: "STOP FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-//                 }
-//             }
-//         }
+
         
         
     //     stage('Sonarqube') {
